@@ -1,29 +1,67 @@
 import UIKit
 
-class MainController: UITableViewController {
+class MainController: UIViewController {
     
+    private let game = Game()
+    private let impact = UIImpactFeedbackGenerator(style: .light)
     private var creationButton: UIButton!
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: 360, height: 75)
+        layout.minimumInteritemSpacing = 4
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(LifeCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        return collectionView
+    }()
 
-    let game = Game()
+    // MARK: - Properties
+    private let reuseIdentifier = "Cell"
+
     
-    typealias Animation = (UITableViewCell, IndexPath, UITableView) -> Void
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
-        tableView.register(UINib(nibName: "LifeCell", bundle: nil), forCellReuseIdentifier: "Cell")
+        
+        
+        
     }
     
     //MARK: UI
 
     func setUpUI() {
-        view.backgroundColor = UIColor.purple
+        setViewBackgroundGradient(sender: self, .purple, .black)
         setUpNavbar()
         setUpButton()
-        setTableViewBackgroundGradient(sender: self, .purple, .black)
+        setUpCollectionView()
+
     }
     
-    func setTableViewBackgroundGradient(sender: UITableViewController, _ topColor:UIColor, _ bottomColor:UIColor) {
+
+    
+    func setUpCollectionView() {
+        view.addSubview(collectionView)
+        
+        NSLayoutConstraint.activate([
+                    collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                    collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                  
+                    creationButton.heightAnchor.constraint(equalToConstant: 20),
+                    creationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                    creationButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.92),
+                        creationButton.heightAnchor.constraint(equalTo: creationButton.widthAnchor, multiplier: 0.12),
+                    creationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    collectionView.bottomAnchor.constraint(equalTo: creationButton.topAnchor, constant: -20)
+        ])
+    }
+    
+
+    func setViewBackgroundGradient(sender: UIViewController, _ topColor:UIColor, _ bottomColor:UIColor) {
 
         let gradientBackgroundColors = [topColor.cgColor, bottomColor.cgColor]
         let gradientLocations: [NSNumber] = [0.0, 1.0]
@@ -32,12 +70,13 @@ class MainController: UITableViewController {
         gradientLayer.colors = gradientBackgroundColors
         gradientLayer.locations = gradientLocations
 
-        gradientLayer.frame = sender.tableView.bounds
-        let backgroundView = UIView(frame: sender.tableView.bounds)
+        gradientLayer.frame = sender.view.bounds
+        let backgroundView = UIView(frame: sender.view.bounds)
         backgroundView.layer.insertSublayer(gradientLayer, at: 0)
-        sender.tableView.backgroundView = backgroundView
+        sender.view = backgroundView
     }
     
+  
     func setUpNavbar() {
         navigationItem.title = "Клеточное наполнение"
         let appearance = UINavigationBarAppearance()
@@ -57,79 +96,88 @@ class MainController: UITableViewController {
         creationButton.setTitle("СОТВОРИТЬ", for: .normal)
         creationButton.setTitleColor(.white, for: .normal)
         creationButton.layer.cornerRadius = 8
-        view.addSubview(creationButton)
-        
-        NSLayoutConstraint.activate([
-            creationButton.heightAnchor.constraint(equalToConstant: 50),
-            creationButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-            creationButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            creationButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-        ])
-        
         creationButton.addTarget(self, action: #selector(creationButtonTapped), for: .touchDown)
+        view.addSubview(creationButton)
     }
     
     
     @objc func creationButtonTapped() {
-        let impact = UIImpactFeedbackGenerator(style: .light)
         impact.impactOccurred()
         game.addCell()
-        tableView.reloadData()
+        collectionView.reloadData()
+        collectionView.scrollToBottom(animated: true)
     }
     
-    //MARK: Table View Settings
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! LifeCell
+}
+
+extension MainController : UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return game.storage.count
+    }
+    
+
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LifeCell
         
-        let gameCell = game.storage.reversed()[indexPath.section]
+        let gameCell = game.storage.reversed()[indexPath.row]
+        
         cell.nameLabel.text = gameCell.name
         cell.descriptionLabel.text = gameCell.description
-        cell.setUpGradient(with: gameCell.gradientColors)
-        cell.setUpImage(UIImage(named: gameCell.imageName)!)
-        
-        cell.alpha = 0
-
-        UIView.animate(
-            withDuration: 0.5,
-            delay: 0.05 * Double(indexPath.row),
-            animations: {
-                cell.alpha = 1
-        })
+        cell.setUp(image: UIImage(named: gameCell.imageName)!)
         return cell
     }
    
-   
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return game.storage.count
-    }
-  
-    //MARK: Spacing
+}
+
+extension MainController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 75)
+        
     }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.01
+    func collectionView(_ collectionView: UICollectionView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = UIColor.clear
-
-        return view
-    }
- 
-    
- 
-   
-
-    
-
-   
 }
+
+extension UICollectionView {
+
+    // MARK: - UICollectionView scrolling/datasource
+    /// Last Section of the CollectionView
+    var lastSection: Int {
+        return numberOfSections - 1
+    }
+
+    /// IndexPath of the last item in last section.
+    var lastIndexPath: IndexPath? {
+        guard lastSection >= 0 else {
+            return nil
+        }
+
+        let lastItem = numberOfItems(inSection: lastSection) - 1
+        guard lastItem >= 0 else {
+            return nil
+        }
+
+        return IndexPath(item: lastItem, section: lastSection)
+    }
+
+    /// Islands: Scroll to bottom of the CollectionView
+    /// by scrolling to the last item in CollectionView
+    func scrollToBottom(animated: Bool) {
+        guard let lastIndexPath = lastIndexPath else {
+            return
+        }
+        scrollToItem(at: lastIndexPath, at: .bottom, animated: animated)
+    }
+    
+
+}
+
 

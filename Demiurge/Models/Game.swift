@@ -20,7 +20,6 @@ class Game {
                 storage.removeFirst()
             }
         }
-
     }
     
     private func addLiveCell() {
@@ -31,7 +30,6 @@ class Game {
         }
     }
     
-    
      private func printInfo() {
          for c in storage {
              print(c.type, terminator: " ")
@@ -39,6 +37,4 @@ class Game {
          print("")
      }
 
-    
-    
 }

@@ -15,9 +15,7 @@
 		886E19DE27C819300056091F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 886E19DC27C819300056091F /* Main.storyboard */; };
 		886E19E027C819330056091F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 886E19DF27C819330056091F /* Assets.xcassets */; };
 		886E19E327C819330056091F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 886E19E127C819330056091F /* LaunchScreen.storyboard */; };
-		88721AC127C84E8F00FFC67E /* StoragePositionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88721AC027C84E8F00FFC67E /* StoragePositionError.swift */; };
-		88A27BF727C8EF4400BDDCE9 /* LifeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A27BF527C8EF4400BDDCE9 /* LifeCell.swift */; };
-		88A27BF827C8EF4400BDDCE9 /* LifeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88A27BF627C8EF4400BDDCE9 /* LifeCell.xib */; };
+		889EB1D327C925C500B4448B /* LifeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889EB1D227C925C500B4448B /* LifeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,9 +29,7 @@
 		886E19DF27C819330056091F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		886E19E227C819330056091F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		886E19E427C819330056091F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		88721AC027C84E8F00FFC67E /* StoragePositionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoragePositionError.swift; sourceTree = "<group>"; };
-		88A27BF527C8EF4400BDDCE9 /* LifeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCell.swift; sourceTree = "<group>"; };
-		88A27BF627C8EF4400BDDCE9 /* LifeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LifeCell.xib; sourceTree = "<group>"; };
+		889EB1D227C925C500B4448B /* LifeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +80,6 @@
 			children = (
 				8817EB7527C82F9D00A8AAB8 /* Cell.swift */,
 				8817EB7727C830D300A8AAB8 /* Game.swift */,
-				88721AC027C84E8F00FFC67E /* StoragePositionError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -92,8 +87,7 @@
 		88721AC627C8542000FFC67E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				88A27BF527C8EF4400BDDCE9 /* LifeCell.swift */,
-				88A27BF627C8EF4400BDDCE9 /* LifeCell.xib */,
+				889EB1D227C925C500B4448B /* LifeCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -165,7 +159,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				886E19E327C819330056091F /* LaunchScreen.storyboard in Resources */,
-				88A27BF827C8EF4400BDDCE9 /* LifeCell.xib in Resources */,
 				886E19E027C819330056091F /* Assets.xcassets in Resources */,
 				886E19DE27C819300056091F /* Main.storyboard in Resources */,
 			);
@@ -179,10 +172,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				886E19DB27C819300056091F /* ViewController.swift in Sources */,
-				88A27BF727C8EF4400BDDCE9 /* LifeCell.swift in Sources */,
 				8817EB7827C830D300A8AAB8 /* Game.swift in Sources */,
 				8817EB7627C82F9D00A8AAB8 /* Cell.swift in Sources */,
-				88721AC127C84E8F00FFC67E /* StoragePositionError.swift in Sources */,
+				889EB1D327C925C500B4448B /* LifeCell.swift in Sources */,
 				886E19D727C819300056091F /* AppDelegate.swift in Sources */,
 				886E19D927C819300056091F /* SceneDelegate.swift in Sources */,
 			);
